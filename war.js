@@ -1,5 +1,15 @@
 'use strict';
 
+/** 
+ * Create a war object
+ *
+ * @return { Object }
+ * @param {String} config Config string
+ * @param configParser configParser Object
+ * @param tournament tournament Object
+ * @param team team Object
+ */
+
 var war = function (config, configParser, tournament, team) {
     var that, my, noop, complete, on, addTournament, prepare,
         formatOutput, startNth, start, startNewThread;
@@ -20,6 +30,11 @@ var war = function (config, configParser, tournament, team) {
 
     noop = function () {};
 
+    /**
+     * Adds a listener 
+     * @param {string} event Event name
+     * @param {function} cb Function to call on event
+     */
     on = function (event, cb) {
         if ((typeof event !== "string") || (typeof cb !== "function")) { return; }
         if (event === 'complete') {
@@ -27,25 +42,18 @@ var war = function (config, configParser, tournament, team) {
         }
     };
 
-    addTournament = function (err, conf) {
-        if (err) {
-            return;
-        }
-
-        my.tournaments.push(my.tournament(conf, my.team));
-    };
-
-    complete = function (err) {
-        if (err) {
-            return onComplete(err);
-        }
-
+    /**
+     * Check if all tournament are completed and fire the 'complete event'
+     * 
+     *
+     */
+    complete = function () {
         my.completed += 1;
 
         if (my.completed === my.tournamentNumber) {
             my.onComplete.forEach(function (f) {
                 f(null, my.results);
-            })
+            });
         } else {
             startNewThread();
         }
@@ -97,6 +105,25 @@ var war = function (config, configParser, tournament, team) {
         }
     };
 
+    /**
+     * 
+     *
+     *
+     */
+    addTournament = function (callback) {
+        return function (err, conf) {
+            if (err) {
+                return callback(err, null);
+            }
+            my.tournaments.push(my.tournament(conf, my.team));
+        };
+    };
+
+    /**
+     * 
+     *
+     *
+     */
     prepare = function (callback) {
         var i, cb, fn;
         cb = callback || noop;
@@ -104,15 +131,6 @@ var war = function (config, configParser, tournament, team) {
         if (my.tournaments) {
             return cb(null);
         }
-
-        fn = function (callback) {
-            return function (err, conf) {
-                if (err) {
-                    cb(err, null);
-                }
-                return addTournament(err, conf);
-            };
-        };
 
         my.tournaments = [];
         my.configParser.getNumOfTournament(function (err, number) {
@@ -122,12 +140,17 @@ var war = function (config, configParser, tournament, team) {
 
             my.tournamentNumber = number;
             for (i = 0; i < my.tournamentNumber; i += 1) {
-                my.configParser.getNthTournament(i, fn(cb));
+                my.configParser.getNthTournament(i, addTournament(cb));
             }
         });
         cb(null, my.tournaments);
     };
 
+    /**
+     * 
+     *
+     *
+     */
     formatOutput = function (results, callback) {
         var output = [];
         results.forEach(function (res) {

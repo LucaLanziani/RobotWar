@@ -1,3 +1,9 @@
+'use strict';
+/**
+ * Returns a team object
+ *
+ * @param 
+ */
 var team = function (robots) {
     var my, that, sort, addRobots, availableRobots,
         takeNRobots, getRobots;
@@ -6,10 +12,19 @@ var team = function (robots) {
     my = {};
     my.robots = robots || [];
 
+    /**
+     * Sorts the robots according to the power
+     * From the stronger to weakest
+     */
     sort = function () {
         my.robots = my.robots.sort(function (a, b) { return b - a; });
     };
 
+    /**
+     * Adds new robots to the team and sort it
+     * 
+     * @param {number[]} robots Array of power
+     */
     addRobots = function (robots) {
         var toAdd = robots.filter(function (x) { return (x > 0 && x < 101); });
 
@@ -17,10 +32,18 @@ var team = function (robots) {
         sort();
     };
 
+    /**
+     * Returns the number of available robots
+     */
     availableRobots = function () {
         return my.robots.length;
     };
 
+    /**
+     * Returns N robots and removes them from the team
+     *
+     * @param {number} number The number of robots to remove
+     */
     takeNRobots = function (number) {
         var n, takeN, taken;
 
@@ -33,6 +56,10 @@ var team = function (robots) {
         return taken;
     };
 
+    /**
+     * Returns the array of robots
+     *
+     */
     getRobots = function () {
         return my.robots;
     };

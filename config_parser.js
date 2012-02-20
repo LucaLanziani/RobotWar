@@ -1,3 +1,5 @@
+'use strict';
+
 var configParser = function (data) {
     if (typeof data !== 'string') {
         throw new Error('config should be a string');
@@ -16,9 +18,14 @@ var configParser = function (data) {
     my.tournaments = [];
     my.offset = 0;
     my.numOfParsedTournament = 0;
-    
+
     noop = function () {};
 
+    /**
+     * 
+     *
+     *
+     */
     parse = function () {
         var fn;
         if (my.arrData) {
@@ -32,6 +39,11 @@ var configParser = function (data) {
         return fn();
     };
 
+    /**
+     * 
+     *
+     *
+     */
     parseNextNTournament = function (number, callback) {
         var cb, n, parseN, i;
         cb = callback || noop;
@@ -44,10 +56,21 @@ var configParser = function (data) {
         parseNextTournament(cb);
     };
 
+
+    /**
+     * 
+     *
+     *
+     */
     getRawData = function () {
         return my.rawData;
     };
 
+    /**
+     * 
+     *
+     *
+     */
     getNumOfTournament = function (callback) {
         var cb;
         cb = callback || noop;
@@ -55,7 +78,7 @@ var configParser = function (data) {
         if (!my.numOfTournament) {
             nextInt(function (err, int) {
                 if (err) {
-                    return  cb(err, null);
+                    return cb(err, null);
                 }
                 my.numOfTournament = int;
                 return cb(null, int);
@@ -64,6 +87,11 @@ var configParser = function (data) {
         return cb(null, my.numOfTournament);
     };
 
+    /**
+     * 
+     *
+     *
+     */
     getNthTournament = function (number, callback) {
         var cb, tournament, n;
 
@@ -79,6 +107,11 @@ var configParser = function (data) {
         }
     };
 
+    /**
+     * 
+     *
+     *
+     */
     parseNextTournament = function (callback) {
         var cb, field, nRobotA, nRobotB, offset,
             parse, numOfParsedTournament, parsedTournament;
@@ -112,6 +145,11 @@ var configParser = function (data) {
         }
     };
 
+    /**
+     * 
+     *
+     *
+     */
     parseTournamentConf = function (callback) {
         var conf, fn, cb;
         conf = {};
@@ -133,19 +171,28 @@ var configParser = function (data) {
         cb(null, conf);
     };
 
+    /**
+     * 
+     *
+     *
+     */
     parseTeams = function (nRobotA, nRobotB, from, callback) {
         var cb, to;
         cb = callback || noop;
         to = from + nRobotA + nRobotB;
         if (to > my.arrData.length) {
-           return cb(new Error("There aren't enough robots"));
+            return cb(new Error("There aren't enough robots"));
         }
-        
         return cb(null, {"robotsA": parseRobot(nRobotA, from, cb), "robotsB": parseRobot(nRobotB, from + nRobotA, cb)});
     };
 
+    /**
+     * 
+     *
+     *
+     */
     parseRobot = function (number, from, cb) {
-        var n, start;
+        var n, start, robots;
 
         n = number || 0;
         start = from || my.offset;
@@ -163,6 +210,11 @@ var configParser = function (data) {
         return robots;
     };
 
+    /**
+     * 
+     *
+     *
+     */
     nextInt = function (callback) {
         var cb;
         cb = callback || noop;
