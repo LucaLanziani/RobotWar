@@ -1,4 +1,4 @@
-
+'use strict';
 var team = require('./team.js'),
     tournament = require('./tournament.js'),
     configParser = require('./config_parser.js'),
@@ -6,12 +6,13 @@ var team = require('./team.js'),
     fs = require('fs');
 
 
-var war1 = war(fs.readFileSync(process.argv[2]).toString(), configParser, tournament, team);    
+var war1 = war(fs.readFileSync(process.argv[2]).toString(), configParser, tournament, team);
 
 war1.prepare(function (err, number) {
     if (err) {
         console.log(err);
-        //process.exit();
+        console.log("parsed", number);
+        process.exit();
     } else {
         war1.on('complete', function (err, results) {
             war1.formatOutput(results, function (err, output) {

@@ -27,16 +27,11 @@ var configParser = function (data) {
      *
      */
     parse = function () {
-        var fn;
         if (my.arrData) {
             return;
         }
 
-        fn = function () {
-            my.arrData = data.replace(my.pattern, "\n").split('\n');
-        };
-
-        return fn();
+        return my.arrData = data.replace(my.pattern, "\n").split('\n');
     };
 
     /**
@@ -75,16 +70,18 @@ var configParser = function (data) {
         var cb;
         cb = callback || noop;
         parse();
-        if (!my.numOfTournament) {
-            nextInt(function (err, int) {
-                if (err) {
-                    return cb(err, null);
-                }
-                my.numOfTournament = int;
-                return cb(null, int);
-            });
+
+        if (my.numOfTournament) {
+            return cb(null, my.numOfTournament);
         }
-        return cb(null, my.numOfTournament);
+
+        nextInt(function (err, num) {
+            if (err) {
+                return cb(err, null);
+            }
+            my.numOfTournament = num;
+            return cb(null, num);
+        });
     };
 
     /**
@@ -216,15 +213,18 @@ var configParser = function (data) {
      *
      */
     nextInt = function (callback) {
-        var cb;
+        var cb, number;
         cb = callback || noop;
-
         if (my.arrData.length < my.offset) {
             return cb(new Error("No more Int in config"), null);
         }
 
         my.offset += 1;
-        return cb(null, parseInt(my.arrData[my.offset - 1], 10));
+        number = parseInt(my.arrData[my.offset - 1], 10);
+        if (isNaN(number)) {
+            return cb(new Error("This is not an Integer"), null);
+        }
+        return cb(null, number);
     };
 
     that.getNumOfTournament = getNumOfTournament;

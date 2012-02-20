@@ -273,6 +273,7 @@ var war1 = war(readFile(arguments[0]), configParser, tournament, team);
 war1.prepare(function (err, number) {
     if (err) {
         print(err);
+        print("parsed: ", number);
         quit();
     } else {
         war1.on('complete', function (err, results) {
@@ -280,7 +281,7 @@ war1.prepare(function (err, number) {
                 print(output.join("\n"));
             });
         });
-
+       
         war1.start();
     }
 });

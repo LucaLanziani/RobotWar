@@ -19,7 +19,7 @@ var war = function (config, configParser, tournament, team) {
 
     my.rawConfig = config;
     my.configParser = configParser(config);
-    my.tournamentNumber = my.configParser.getNumOfTournament();
+    my.tournamentNumber = 0;
     my.results = [];
     my.completed = 0;
     my.activeThread = 0;
@@ -98,7 +98,6 @@ var war = function (config, configParser, tournament, team) {
 
     start = function () {
         var i;
-        prepare();
 
         for (i = 0; i < my.tournaments.length; i += 1) {
             startNth(i, complete);
@@ -113,8 +112,9 @@ var war = function (config, configParser, tournament, team) {
     addTournament = function (callback) {
         return function (err, conf) {
             if (err) {
-                return callback(err, null);
+                return callback(err, my.tournamentNumber);
             }
+            my.tournamentNumber += 1;
             my.tournaments.push(my.tournament(conf, my.team));
         };
     };
@@ -129,7 +129,7 @@ var war = function (config, configParser, tournament, team) {
         cb = callback || noop;
 
         if (my.tournaments) {
-            return cb(null);
+            return cb(null, my.tournamentNumber);
         }
 
         my.tournaments = [];
@@ -138,12 +138,12 @@ var war = function (config, configParser, tournament, team) {
                 return cb(err, null);
             }
 
-            my.tournamentNumber = number;
-            for (i = 0; i < my.tournamentNumber; i += 1) {
+            for (i = 0; i < number; i += 1) {
                 my.configParser.getNthTournament(i, addTournament(cb));
             }
+
+            return cb(null, my.tournamentNumber);
         });
-        cb(null, my.tournaments);
     };
 
     /**
