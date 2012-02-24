@@ -1,4 +1,3 @@
-
 # RobotWar
 
   Solution for RobotWar puzzle on gild.com
@@ -12,7 +11,7 @@
 
 (The MIT License)
 
-Copyright (c) 2011 Grapily &lt;dev@grapily.com&gt;
+Copyright (c) 2011 Luca Lanziani &lt;lucalanziani@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
