@@ -4,72 +4,72 @@
  *
  * @param 
  */
-var team = function (robots) {
-    var my, that, sort, addRobots, availableRobots,
-        takeNRobots, getRobots;
 
-    that = {};
-    my = {};
-    my.robots = robots || [];
+var Team = function (robots) {
+    var that = this;
 
-    /**
-     * Sorts the robots according to the power
-     * From the stronger to weakest
-     */
-    sort = function () {
-        my.robots = my.robots.sort(function (a, b) { return b - a; });
-    };
+    that.robots = robots || [];
+}
 
-    /**
-     * Adds new robots to the team and sort it
-     * 
-     * @param {number[]} robots Array of power
-     */
-    addRobots = function (robots) {
-        var toAdd = robots.filter(function (x) { return (x > 0 && x < 101); });
+var prot = Team.prototype;
 
-        my.robots = my.robots.concat(toAdd);
-        sort();
-    };
-
-    /**
-     * Returns the number of available robots
-     */
-    availableRobots = function () {
-        return my.robots.length;
-    };
-
-    /**
-     * Returns N robots and removes them from the team
-     *
-     * @param {number} number The number of robots to remove
-     */
-    takeNRobots = function (number) {
-        var n, takeN, taken;
-
-        n = number || availableRobots();
-        takeN = Math.min(n, availableRobots());
-
-        taken = my.robots.slice(0, takeN);
-        my.robots = my.robots.slice(takeN);
-
-        return taken;
-    };
-
-    /**
-     * Returns the array of robots
-     *
-     */
-    getRobots = function () {
-        return my.robots;
-    };
-
-    sort();
-    that.addRobots = addRobots;
-    that.availableRobots = availableRobots;
-    that.takeNRobots = takeNRobots;
-    that.getRobots = getRobots;
-    return that;
+prot.sort = function () {
+    var that = this;
+    that.robots = that.robots.sort(function (a, b) { return b - a; });
 };
+
+/**
+ * Adds new robots to the team and sort it
+ * 
+ * @param {number[]} robots Array of power
+ */
+prot.addRobots = function (robots) {
+    var that = this;
+    var toAdd = robots.filter(function (x) { return (x > 0 && x < 101); });
+
+    that.robots = that.robots.concat(toAdd);
+    that.sort();
+};
+
+/**
+ * Returns the number of available robots
+ */
+prot.availableRobots = function () {
+    return this.robots.length;
+};
+
+/**
+ * Returns N robots and removes them from the team
+ *
+ * @param {number} number The number of robots to remove
+ */
+prot.takeNRobots = function (number) {
+    var n, takeN, taken;
+
+    n = number || this.availableRobots();
+    takeN = Math.min(n, this.availableRobots());
+
+    taken = this.robots.slice(0, takeN);
+    this.robots = this.robots.slice(takeN);
+
+    return taken;
+};
+
+/**
+ * Returns the array of robots
+ *
+ */
+prot.getRobots = function () {
+    return this.robots;
+};
+
+
+var team = function(robots) {
+    var obj;
+    obj = new Team(robots);
+    obj.sort();
+    return obj;
+}
+
 
 module.exports = team;
