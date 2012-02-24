@@ -1,6 +1,4 @@
 'use strict';
-'use strict';
-
 
 var noop = function() {};
 
@@ -15,15 +13,12 @@ var ConfigParser = function(data) {
 
 }
 
-
-var prot = ConfigParser.prototype;
-
 /**
  * 
  *
  *
  */
-prot.parse = function () {
+ConfigParser.prototype.parse = function () {
     var that;
     that = this;
     if (that.arrData) {
@@ -38,7 +33,7 @@ prot.parse = function () {
  *
  *
  */
-prot.parseNextNTournament = function (number, callback) {
+ConfigParser.prototype.parseNextNTournament = function (number, callback) {
     var cb, n, parseN, i, that;
     that = this;
     cb = callback || noop;
@@ -57,7 +52,7 @@ prot.parseNextNTournament = function (number, callback) {
  *
  *
  */
-prot.getRawData = function () {
+ConfigParser.prototype.getRawData = function () {
     return this.rawData;
 };
 
@@ -66,7 +61,7 @@ prot.getRawData = function () {
  *
  *
  */
-prot.getNumOfTournament = function (callback) {
+ConfigParser.prototype.getNumOfTournament = function (callback) {
     var cb, that;
     that = this;
     cb = callback || noop;
@@ -91,7 +86,7 @@ prot.getNumOfTournament = function (callback) {
  *
  *
  */
-prot.getNthTournament = function (number, callback) {
+ConfigParser.prototype.getNthTournament = function (number, callback) {
     var cb, tournament, n, that;
     that = this;
 
@@ -112,7 +107,7 @@ prot.getNthTournament = function (number, callback) {
  *
  *
  */
-prot.parseNextTournament = function (callback) {
+ConfigParser.prototype.parseNextTournament = function (callback) {
     var cb, field, nRobotA, nRobotB, offset,
         parse, numOfParsedTournament, parsedTournament, that;
     that = this;
@@ -150,7 +145,7 @@ prot.parseNextTournament = function (callback) {
  *
  *
  */
-prot.parseTournamentConf = function (callback) {
+ConfigParser.prototype.parseTournamentConf = function (callback) {
     var conf, fn, cb, that;
     that = this;
     conf = {};
@@ -177,7 +172,7 @@ prot.parseTournamentConf = function (callback) {
  *
  *
  */
-prot.parseTeams = function (nRobotA, nRobotB, from, callback) {
+ConfigParser.prototype.parseTeams = function (nRobotA, nRobotB, from, callback) {
     var cb, to, that;
     that = this;
     cb = callback || noop;
@@ -193,7 +188,7 @@ prot.parseTeams = function (nRobotA, nRobotB, from, callback) {
  *
  *
  */
-prot.parseRobot = function (number, from, cb) {
+ConfigParser.prototype.parseRobot = function (number, from, cb) {
     var n, start, robots, that;
     that = this;
 
@@ -218,7 +213,7 @@ prot.parseRobot = function (number, from, cb) {
  *
  *
  */
-prot.nextInt = function (callback) {
+ConfigParser.prototype.nextInt = function (callback) {
     var cb, number, that;
     that = this;
     cb = callback || noop;
@@ -252,9 +247,8 @@ var Team = function (robots) {
     that.robots = robots || [];
 }
 
-var prot = Team.prototype;
 
-prot.sort = function () {
+Team.prototype.sort = function () {
     var that = this;
     that.robots = that.robots.sort(function (a, b) { return b - a; });
 };
@@ -264,7 +258,7 @@ prot.sort = function () {
  * 
  * @param {number[]} robots Array of power
  */
-prot.addRobots = function (robots) {
+Team.prototype.addRobots = function (robots) {
     var that = this;
     var toAdd = robots.filter(function (x) { return (x > 0 && x < 101); });
 
@@ -275,7 +269,7 @@ prot.addRobots = function (robots) {
 /**
  * Returns the number of available robots
  */
-prot.availableRobots = function () {
+Team.prototype.availableRobots = function () {
     return this.robots.length;
 };
 
@@ -284,7 +278,7 @@ prot.availableRobots = function () {
  *
  * @param {number} number The number of robots to remove
  */
-prot.takeNRobots = function (number) {
+Team.prototype.takeNRobots = function (number) {
     var n, takeN, taken;
 
     n = number || this.availableRobots();
@@ -300,7 +294,7 @@ prot.takeNRobots = function (number) {
  * Returns the array of robots
  *
  */
-prot.getRobots = function () {
+Team.prototype.getRobots = function () {
     return this.robots;
 };
 
@@ -312,7 +306,6 @@ var team = function(robots) {
     return obj;
 }
 
-var noop = function () {};
 
 var Tournament = function (conf, team) {
     var that;
@@ -324,14 +317,13 @@ var Tournament = function (conf, team) {
     that.onComplete = [];
 }
 
-var prot = Tournament.prototype;
 
 /**
  * Adds a listener 
  * @param {string} event Event name
  * @param {function} cb Function to call on event
  */
-prot.on = function (event, cb) {
+Tournament.prototype.on = function (event, cb) {
     if ((typeof event !== "string") || (typeof cb !== "function")) { return; }
     if (event === 'complete') {
         this.onComplete.push(cb);
@@ -347,7 +339,7 @@ prot.on = function (event, cb) {
  *
  * @returns living Robots
  */
-prot.fight = function (robots, callback) {
+Tournament.prototype.fight = function (robots, callback) {
     var cb, i, min_power, min_robot;
 
     cb = callback || noop;
@@ -366,7 +358,7 @@ prot.fight = function (robots, callback) {
 /**
  *  Take robots from Teams and start a fight
  */
-prot.match = function (callback) {
+Tournament.prototype.match = function (callback) {
     var matchable, robots, cb, that;
 
     that = this;
@@ -390,14 +382,14 @@ prot.match = function (callback) {
 /**
  * Check if is there a winner
  */
-prot.notAWinner = function () {
+Tournament.prototype.notAWinner = function () {
     return ((this.teamA.availableRobots() > 0) && (this.teamB.availableRobots() > 0));
 };
 
 /**
  * Start a tournament
  */
-prot.start = function (callback) {
+Tournament.prototype.start = function (callback) {
     var cb, fn, that;
     that = this;
     cb = callback || noop;
