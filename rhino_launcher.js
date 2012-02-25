@@ -1,4 +1,4 @@
-/*
+
     Rhino-Require is Public Domain
     <http://en.wikipedia.org/wiki/Public_Domain>
     
@@ -7,7 +7,7 @@
     of the public at large and to the detriment of our heirs and successors. We
     intend this dedication to be an overt act of relinquishment in perpetuity of
     all present and future rights to this code under copyright law.
- */
+ 
 
 (function(global) {
 
